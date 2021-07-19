@@ -4,7 +4,7 @@
     "discord.js": "^12.5.3"
   },
   "name": "discord-menu-buttons",
-  "version": "1.4.4",
+  "version": "1.4.6",
   "description": "Create a configurable Menu with the new Discord Buttons",
   "main": "index.js",
   "devDependencies": {},
@@ -19,5 +19,9 @@
     "buttons"
   ],
   "author": "ValuWaurld",
-  "license": "MIT"
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ValuWaurld/discord-menu-buttons.git"
+  }
 }
