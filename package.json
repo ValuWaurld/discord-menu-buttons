@@ -4,7 +4,7 @@
     "discord.js": "^12.5.3"
   },
   "name": "discord-menu-buttons",
-  "version": "1.4.6",
+  "version": "1.4.7",
   "description": "Create a configurable Menu with the new Discord Buttons",
   "main": "index.js",
   "devDependencies": {},

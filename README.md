@@ -21,7 +21,7 @@
 <!-- DESCRIPTION -->
 ## Description
 
-### A life-changing  module for begginers
+### A life-changing  module for beginners
 
 This module will easily permit you to build customizable messages menus with buttons.
 
@@ -37,6 +37,10 @@ This module will easily permit you to build customizable messages menus with but
   npm install discord-buttons
   npm install discord-menu-buttons
   ```
+
+  discord.js v12.5.3
+
+  discord-buttons v4.0.0
 
 
 
