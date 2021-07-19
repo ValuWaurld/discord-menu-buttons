@@ -65,7 +65,7 @@ class Menu {
             .then(channel => this.channel = channel);
         }
         if (this.channel.type === 'dm') {
-            this.channel.send(this.pages[0].toObject())
+            this.channel.send(this.current.toObject())
             .then(message => {
                 this.message = message;
                 this.awaitButtons();
@@ -73,7 +73,7 @@ class Menu {
             .catch(() => console.log("[discord-menu-buttons] The User you are trying to send the Menu to has his DM blocked."));
         } else {
             if (channelPermissions.some(p => !this.channel.permissionsFor(this.channel.client.user.id).has(p))) return new Error("[discord-menu-buttons] Your bot does not have one of the following permissions: " + channelPermissions.join(" | "));
-            this.channel.send(this.pages[0].toObject())
+            this.channel.send(this.current.toObject())
             .then(message => {
                 this.message = message;
                 this.awaitButtons();
@@ -89,12 +89,11 @@ class Menu {
      */
     async awaitButtons() {
         const filter = button => this.target ? this.target === button.clicker.user.id : true;
-        const collector = this.message.createButtonCollector(filter, { time: this.time });
-        this.collector = collector;
-        
-        collector.on('collect', button => {
+        const button = (await this.message.awaitButtons(filter, { time: this.time, max: 1})).first();
+        if (!button) this.stop();
+        else {
             const buttonData = this.current.buttons.find(b => b.custom_id === button.id);
-            button.defer();
+            if (!button.reply.has) button.reply.defer().catch(() => {});
             switch (button.id) {
                 case "previous":
                     if (this.page > 1) this.updateMenu(this.page-1);
@@ -118,14 +117,13 @@ class Menu {
                     this.stop();
                     break;
             }
-        })
+        }
     }
 
     /**
      * Update the Menu with the given page number
      */
     updateMenu(page) {
-        this.collector.stop();
         this.page = page;
         this.current = this.pages[page-1];
         this.message.edit(this.current.toObject());
@@ -136,12 +134,14 @@ class Menu {
      * Stop the Menu and delete it, if forced or initialized
      */
     stop(force) {
-        if (this.collector) this.collector.stop();
         if (force === false || force === true) this.deleted = force;
         if (!this.deleted) {
             const object = this.current.toObject();
-            if (object.content) this.message.edit(object.content, { components: [] })
-            else this.message.edit({ embed: object.embed, components: [] });
+            object.components[0].components = object.components[0].components.map(b => {
+                b.disabled = true;
+                return b;
+            })
+            this.message.edit(object);
         }
         else if (!this.message.deleted) this.message.delete();
     }

@@ -1,4 +1,5 @@
 const { MessageEmbed } = require('discord.js');
+const { MessageActionRow } = require('discord-buttons');
 const Button = require('./Button');
 /**
  * A Page that the Menu will be able to display
@@ -27,7 +28,10 @@ class Page {
         let object = {};
         if (typeof this.content === 'string') object.content = this.content;
         else object.embed = this.content;
-        if (this.buttons) object.buttons = this.buttons;
+        const row = new MessageActionRow({
+            components: this.buttons
+        })
+        object.components = [ row ];
         return object;
     }
 }
